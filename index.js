@@ -12,6 +12,4 @@ app.use(express.json());
 app.use('/', roomBookingRouter);
 
 
-app.listen(process.env.PORT,()=>{
-    console.log(process.env.PORT +"is live")
-})
+app.listen(process.env.PORT);
