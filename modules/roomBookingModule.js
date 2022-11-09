@@ -106,7 +106,9 @@ module.exports.getRooms = async (req, res, next) => {
     res.send(response);
   } catch (error) {
     console.error(error);
-    res.status(500).send("server error");
+    res.status(500).send({
+      msg: error
+    });
   }
 };
 
