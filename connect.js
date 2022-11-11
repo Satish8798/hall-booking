@@ -4,7 +4,7 @@ module.exports = {
   selectedDb: {},
   async connect() {
     try {
-      const client = await MongoClient.connect(process.env.MONGODB_URL);
+      const client = await MongoClient.connect(process.env.MONGODB_URL);// connecting to database
       this.selectedDb = client.db("day49_task");
       console.log("connected to database");
     } catch (error) {
