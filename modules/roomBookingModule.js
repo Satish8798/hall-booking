@@ -18,6 +18,7 @@ module.exports.createRoom = async (req, res, next) => {
 module.exports.bookRoom = async (req, res, next) => {
   const roomId = req.body.book.roomId;
 
+  //function to book a room
   async function bookRoom(priceForOneHour, bookingDetails) {
     const booking = {
       roomId: req.body.book.roomId,
@@ -58,7 +59,7 @@ module.exports.bookRoom = async (req, res, next) => {
   if (room) {
     if (
       requestedDate < today ||
-      (requestedDate===today && requestedStartTime <= now) ||
+      (requestedDate === today && requestedStartTime <= now) ||
       requestedEndTime <= requestedStartTime
     ) {
       return res.status(400).send({
@@ -79,24 +80,25 @@ module.exports.bookRoom = async (req, res, next) => {
         ) {
           let prevDate = new Date(room.bookingDetails[i].Date).toISOString();
           if (requestedDate === prevDate) {
-              return res.status(400).send({
-                msg: "slot is not available",
-              });
-            } 
-          } else if (i === room.bookingDetails.length - 1) {
-            bookRoom(room.price, room.bookingDetails);
-            return res.send({ msg: "Room Booked Successfully" });
+            return res.status(400).send({
+              msg: "slot is not available",
+            });
           }
-        }} else {
+        } else if (i === room.bookingDetails.length - 1) {
           bookRoom(room.price, room.bookingDetails);
           return res.send({ msg: "Room Booked Successfully" });
         }
-      } else {
+      }
+    } else {
+      bookRoom(room.price, room.bookingDetails);
+      return res.send({ msg: "Room Booked Successfully" });
+    }
+  } else {
     return res.status(400).send("Invalid Room ID");
   }
-  //res.send({ msg: "Room Booked Successfully" });
 };
 
+//module to get rooms list
 module.exports.getRooms = async (req, res, next) => {
   try {
     const response = await mongo.selectedDb
@@ -107,11 +109,12 @@ module.exports.getRooms = async (req, res, next) => {
   } catch (error) {
     console.error(error);
     res.status(500).send({
-      msg: error
+      msg: error,
     });
   }
 };
 
+//module to get customer booking details
 module.exports.getCustomerBookingDetails = async (req, res, next) => {
   try {
     const response = await mongo.selectedDb
